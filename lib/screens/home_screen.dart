@@ -3,6 +3,11 @@ import '../services/auth_service.dart';
 import 'login_screen.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_drawer.dart';
+import 'saving_goal_screen.dart';
+import 'saving_history_screen.dart';
+import 'saving_simulator_screen.dart';
+import 'statistics_screen.dart';
+import 'profile_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -12,20 +17,39 @@ class HomeScreen extends StatelessWidget {
     final user = AuthService.currentUser ?? 'Unknown';
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (_) => const HomeScreen()),
-              (route) => false,
-            );
-          },
-          tooltip: 'Back to Home',
+        title: const Text(
+          'Wallet',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
-        title: const Text('Home'),
+        centerTitle: true,
+        backgroundColor: Colors.blue.shade700,
+        elevation: 8,
+        shadowColor: Colors.blue.shade300,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
+        ),
         actions: [
-          // ...icon อื่นๆ เช่น โปรไฟล์...
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: IconButton(
+              icon: const Icon(
+                Icons.account_circle,
+                size: 32,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ProfileScreen()),
+                );
+              },
+              tooltip: 'Profile',
+            ),
+          ),
         ],
       ),
       drawer: const CustomDrawer(),
@@ -36,7 +60,67 @@ class HomeScreen extends StatelessWidget {
           children: [
             Text('สวัสดี, $user', style: const TextStyle(fontSize: 18)),
             const SizedBox(height: 24),
-           
+            Expanded(
+              child: GridView.count(
+                crossAxisCount: 2,
+                mainAxisSpacing: 24,
+                crossAxisSpacing: 24,
+                children: [
+                  _HomeMenuCard(
+                    icon: Icons.savings,
+                    title: 'ออมเงิน',
+                    color: Colors.blue,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const SavingGoalScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  _HomeMenuCard(
+                    icon: Icons.history,
+                    title: 'ประวัติการออม',
+                    color: Colors.green,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const SavingHistoryScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  _HomeMenuCard(
+                    icon: Icons.calculate,
+                    title: 'คำนวณแผนการออม',
+                    color: Colors.purple,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const SavingSimulatorScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  _HomeMenuCard(
+                    icon: Icons.bar_chart,
+                    title: 'สถิติการออม',
+                    color: Colors.teal,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const StatisticsScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -74,7 +158,11 @@ class _HomeMenuCard extends StatelessWidget {
               Text(
                 title,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: color),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                ),
               ),
             ],
           ),

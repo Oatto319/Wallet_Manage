@@ -1,4 +1,4 @@
-name: wallet_manage
+name: work_transaction
 description: "A new Flutter project."
 publish_to: 'none'
 version: 0.1.0
@@ -7,8 +7,10 @@ environment:
   sdk: ^3.8.1
 
 dependencies:
+  http: ^1.1.0
   flutter:
     sdk: flutter
+    
 
 dev_dependencies:
   flutter_test:
