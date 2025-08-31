@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_drawer.dart';
 import '../services/saving_data.dart';
+import '../main.dart'; // เพื่อเข้าถึง MyApp.of(context)
 
 class SavingHistoryScreen extends StatelessWidget {
   const SavingHistoryScreen({super.key});
@@ -9,6 +10,7 @@ class SavingHistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final history = SavingData.history.reversed.toList(); // แสดงรายการใหม่ก่อน
+    final isThai = MyApp.of(context).isThai ?? true;
 
     // คำนวณยอดรวม
     double totalAmount = history.fold(
@@ -17,7 +19,7 @@ class SavingHistoryScreen extends StatelessWidget {
     );
 
     return Scaffold(
-      appBar: customAppBar(context, 'ประวัติการออม'),
+      appBar: customAppBar(context, isThai ? 'ประวัติการออม' : 'Saving History'),
       drawer: const CustomDrawer(),
       body: Container(
         decoration: BoxDecoration(
@@ -67,9 +69,9 @@ class SavingHistoryScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'ยอดรวมที่ออมไปแล้ว',
-                          style: TextStyle(
+                        Text(
+                          isThai ? 'ยอดรวมที่ออมไปแล้ว' : 'Total Saved',
+                          style: const TextStyle(
                             fontSize: 16,
                             color: Colors.white70,
                             fontWeight: FontWeight.w500,
@@ -85,7 +87,7 @@ class SavingHistoryScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '${history.length} รายการ',
+                          '${history.length} ${isThai ? 'รายการ' : 'entries'}',
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.white70,
@@ -112,7 +114,7 @@ class SavingHistoryScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            'ยังไม่มีประวัติการออม',
+                            isThai ? 'ยังไม่มีประวัติการออม' : 'No saving history yet',
                             style: TextStyle(
                               fontSize: 18,
                               color: Colors.grey.shade600,
@@ -121,7 +123,7 @@ class SavingHistoryScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'เริ่มออมเงินเพื่อเห็นประวัติที่นี่',
+                            isThai ? 'เริ่มออมเงินเพื่อเห็นประวัติที่นี่' : 'Start saving to see history here',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey.shade500,
@@ -131,10 +133,7 @@ class SavingHistoryScreen extends StatelessWidget {
                       ),
                     )
                   : ListView.builder(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 8,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                       itemCount: history.length,
                       itemBuilder: (context, index) {
                         final item = history[index];
@@ -144,9 +143,7 @@ class SavingHistoryScreen extends StatelessWidget {
                         // แยกวันที่และเวลา
                         final dateParts = date.split(' ');
                         final dateOnly = dateParts[0];
-                        final timeOnly = dateParts.length > 1
-                            ? dateParts[1]
-                            : '';
+                        final timeOnly = dateParts.length > 1 ? dateParts[1] : '';
 
                         return Container(
                           margin: const EdgeInsets.only(bottom: 12),
@@ -162,10 +159,7 @@ class SavingHistoryScreen extends StatelessWidget {
                             ],
                           ),
                           child: ListTile(
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 12,
-                            ),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                             leading: Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
@@ -230,19 +224,14 @@ class SavingHistoryScreen extends StatelessWidget {
                               ],
                             ),
                             trailing: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 6,
-                              ),
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                               decoration: BoxDecoration(
                                 color: Colors.green.shade50,
                                 borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                  color: Colors.green.shade200,
-                                ),
+                                border: Border.all(color: Colors.green.shade200),
                               ),
                               child: Text(
-                                'สำเร็จ',
+                                isThai ? 'สำเร็จ' : 'Success',
                                 style: TextStyle(
                                   color: Colors.green.shade700,
                                   fontSize: 12,

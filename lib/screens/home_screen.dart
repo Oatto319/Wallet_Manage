@@ -1,34 +1,42 @@
 import 'package:flutter/material.dart';
-import '../services/auth_service.dart';
-import 'login_screen.dart';
-import '../widgets/custom_app_bar.dart';
+import 'package:provider/provider.dart';
+import '../services/auth_service.dart' as auth;
+import 'profile_screen.dart';
 import '../widgets/custom_drawer.dart';
 import 'saving_goal_screen.dart';
 import 'saving_history_screen.dart';
 import 'saving_simulator_screen.dart';
 import 'statistics_screen.dart';
-import 'profile_screen.dart';
+import '../main.dart'; // สำหรับ MyApp.of(context)
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
   Widget build(BuildContext context) {
-    final user = AuthService.currentUser ?? 'Unknown';
+    final appState = Provider.of<AppState>(context);
+    final isThai = appState.isThai;
+    final theme = Theme.of(context);
+    final user = auth.AuthService.currentUser ?? 'Unknown';
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Wallet',
-          style: TextStyle(
-            fontSize: 24,
+        title: Text(
+          isThai ? 'วอลเล็ต' : 'Wallet',
+          style: theme.textTheme.titleLarge?.copyWith(
+            color: theme.colorScheme.onPrimary,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
           ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.blue.shade700,
+        backgroundColor: theme.primaryColor,
         elevation: 8,
-        shadowColor: Colors.blue.shade300,
+        shadowColor: theme.primaryColorLight,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
         ),
@@ -36,18 +44,14 @@ class HomeScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 16),
             child: IconButton(
-              icon: const Icon(
-                Icons.account_circle,
-                size: 32,
-                color: Colors.white,
-              ),
+              icon: Icon(Icons.account_circle, size: 32, color: theme.colorScheme.onPrimary),
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const ProfileScreen()),
                 );
               },
-              tooltip: 'Profile',
+              tooltip: isThai ? 'โปรไฟล์' : 'Profile',
             ),
           ),
         ],
@@ -58,7 +62,10 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('สวัสดี, $user', style: const TextStyle(fontSize: 18)),
+            Text(
+              isThai ? 'สวัสดี, $user' : 'Hello, $user',
+              style: theme.textTheme.bodyLarge,
+            ),
             const SizedBox(height: 24),
             Expanded(
               child: GridView.count(
@@ -68,53 +75,45 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   _HomeMenuCard(
                     icon: Icons.savings,
-                    title: 'ออมเงิน',
-                    color: Colors.blue,
+                    title: isThai ? 'ออมเงิน' : 'Saving Goal',
+                    color: theme.colorScheme.primary,
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (_) => const SavingGoalScreen(),
-                        ),
+                        MaterialPageRoute(builder: (_) => const SavingGoalScreen()),
                       );
                     },
                   ),
                   _HomeMenuCard(
                     icon: Icons.history,
-                    title: 'ประวัติการออม',
-                    color: Colors.green,
+                    title: isThai ? 'ประวัติการออม' : 'Saving History',
+                    color: theme.colorScheme.secondary,
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (_) => const SavingHistoryScreen(),
-                        ),
+                        MaterialPageRoute(builder: (_) => const SavingHistoryScreen()),
                       );
                     },
                   ),
                   _HomeMenuCard(
                     icon: Icons.calculate,
-                    title: 'คำนวณแผนการออม',
-                    color: Colors.purple,
+                    title: isThai ? 'คำนวณแผนการออม' : 'Saving Simulator',
+                    color: Colors.purple.shade700,
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (_) => const SavingSimulatorScreen(),
-                        ),
+                        MaterialPageRoute(builder: (_) => const SavingSimulatorScreen()),
                       );
                     },
                   ),
                   _HomeMenuCard(
                     icon: Icons.bar_chart,
-                    title: 'สถิติการออม',
-                    color: Colors.teal,
+                    title: isThai ? 'สถิติการออม' : 'Statistics',
+                    color: Colors.teal.shade700,
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (_) => const StatisticsScreen(),
-                        ),
+                        MaterialPageRoute(builder: (_) => const StatisticsScreen()),
                       );
                     },
                   ),
@@ -143,9 +142,11 @@ class _HomeMenuCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: theme.cardColor,
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
         onTap: onTap,
@@ -158,7 +159,7 @@ class _HomeMenuCard extends StatelessWidget {
               Text(
                 title,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: theme.textTheme.bodyMedium?.copyWith(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: color,

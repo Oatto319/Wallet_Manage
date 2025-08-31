@@ -4,13 +4,20 @@ publish_to: 'none'
 version: 0.1.0
 
 environment:
-  sdk: ^3.8.1
+  sdk: ">=3.8.1 <4.0.0"
 
 dependencies:
-  http: ^1.1.0
   flutter:
     sdk: flutter
-    
+
+  # รองรับ localization
+  flutter_localizations:
+    sdk: flutter
+
+  # สำหรับเปิด URL / อีเมล / โทรศัพท์
+  provider: ^6.1.5+1
+  shared_preferences: ^2.5.3
+  url_launcher: ^6.1.10
 
 dev_dependencies:
   flutter_test:
