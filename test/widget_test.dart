@@ -8,7 +8,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:wallet_manage/main.dart';
+// ignore: depend_on_referenced_packages
+
+import 'package:work_transaction/main.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
